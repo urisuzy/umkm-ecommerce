@@ -2,7 +2,7 @@
 Tugas umkm
 
 ## Instal
-```
+```bash
 cp .env.example .env
 ```
 ```
