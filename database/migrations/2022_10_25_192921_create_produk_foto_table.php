@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('produk_foto', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('produk_id');
+            $table->foreignId('produk_id')->nullable();
             $table->string('path_foto');
             $table->timestamps();
         });

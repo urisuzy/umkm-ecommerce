@@ -16,6 +16,9 @@ php artisan key:generate
 php artisan migrate
 ```
 ```
+php artisan storage:link
+```
+```
 php artisan serve
 ```
 
@@ -24,7 +27,7 @@ php artisan serve
 ```
 - Membuat akun
 ```
-### Produk (Seller)
+### Produk (UMKM)
 ```
 - CRUD Produk
 ```
@@ -38,7 +41,7 @@ php artisan serve
 - Membuat Pesanan
 - Membayar Pesanan (IPaymu)
 ```
-### Pesanan (Seller)
+### Pesanan (UMKM)
 ```
 - Mengubah status Pesanan [reject, process]
 - Menginput resi

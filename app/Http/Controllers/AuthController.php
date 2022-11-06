@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRole;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
@@ -22,16 +23,14 @@ class AuthController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', Rules\Password::defaults()],
             'alamat' => ['required', 'string', 'max:255'],
-            'no_telp' => ['required', 'numeric'],
-            'role' => ['required', 'in:buyer,seller']
+            'no_telp' => ['required', 'numeric']
         ]);
 
         DB::beginTransaction();
         try {
             $user = User::create([
                 'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'role' => $request->role
+                'password' => Hash::make($request->password)
             ]);
 
             UserProfile::create([
@@ -57,8 +56,13 @@ class AuthController extends Controller
 
         if (Auth::attempt($request->toArray())) {
             $user = Auth::user();
-            $createToken = $user->createToken('auth-token-umkm', [$user->profile->role]);
-            return $this->successResponse(['access_token' => $createToken->plainTextToken]);
+            $umkm = $user->umkm ? true : false;
+            $role = $umkm ? UserRole::UMKM : UserRole::BUYER;
+            $createToken = $user->createToken('auth-token-umkm', [$role]);
+            return $this->successResponse([
+                'access_token' => $createToken->plainTextToken,
+                'umkm' => $umkm
+            ]);
         } else {
             return $this->errorResponse('Email or password is wrong', 401);
         }

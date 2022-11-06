@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Foto\FotoProdukController;
+use App\Http\Controllers\Produk\SellerProdukController;
+use App\Http\Controllers\Umkm\UmkmController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,4 +29,22 @@ Route::prefix('auth')->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->middleware(['auth:sanctum']);
 });
 
-require __DIR__ . '/auth.php';
+// Seller Routes
+Route::prefix('umkm')->middleware(['auth:sanctum'])->group(function () {
+
+    Route::post('/', [UmkmController::class, 'store']);
+
+    Route::middleware(['ability:umkm'])->group(function () {
+        // Foto Routes
+        Route::prefix('foto')->group(function () {
+            Route::post('produk', [FotoProdukController::class, 'upload']);
+        });
+
+        // Produk for Seller
+        Route::prefix('produk')->group(function () {
+            Route::post('/', [SellerProdukController::class, 'store']);
+        });
+    });
+});
+
+// require __DIR__ . '/auth.php';

@@ -21,8 +21,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'email',
-        'password',
-        'role'
+        'password'
     ];
 
     /**
@@ -47,5 +46,10 @@ class User extends Authenticatable
     public function profile()
     {
         return $this->hasOne(UserProfile::class);
+    }
+
+    public function umkm()
+    {
+        return $this->hasOne(Umkm::class);
     }
 }

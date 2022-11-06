@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('nama');
             $table->integer('harga');
             $table->integer('diskon');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
