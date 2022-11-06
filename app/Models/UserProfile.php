@@ -16,6 +16,10 @@ class UserProfile extends Model
         'no_telp'
     ];
 
+    protected $hidden = [
+        'user_id',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
