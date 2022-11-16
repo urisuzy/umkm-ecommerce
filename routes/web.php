@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,3 +19,4 @@ Route::get('/', function () {
     return ['Laravel' => app()->version()];
 });
 
+Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'manualVerify'])->name('verification.verify');

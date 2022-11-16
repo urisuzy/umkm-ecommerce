@@ -13,7 +13,7 @@ php artisan key:generate
 ```
 > Edit .env, setting db
 ```
-php artisan migrate
+php artisan migrate:refresh
 ```
 ```
 php artisan storage:link
