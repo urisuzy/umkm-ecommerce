@@ -19,6 +19,9 @@ php artisan migrate:refresh
 php artisan storage:link
 ```
 ```
+php artisan optimize:clear
+```
+```
 php artisan serve
 ```
 
