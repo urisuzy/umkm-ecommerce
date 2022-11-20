@@ -39,6 +39,14 @@ php artisan optimize:clear
 php artisan serve
 ```
 
+## Running Instruction
+```
+php artisan serve
+```
+```
+ngrok http 8000
+```
+
 ## Features
 ### Akun
 ```
