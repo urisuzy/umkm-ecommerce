@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('no_kuitansi');
             $table->timestamp('tgl_beli');
             $table->string('status');
-            $table->timestamp('tgl_bayar');
+            $table->timestamp('tgl_bayar')->useCurrent();
             $table->timestamps();
         });
     }
