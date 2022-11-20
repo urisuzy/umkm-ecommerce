@@ -44,7 +44,7 @@ class OwnerHoldingController extends Controller
 
     public function get($id)
     {
-        $holding = Holding::where('id', $id)->where('user_id', Auth::id())->first();
+        $holding = Holding::where('id', $id)->where('user_id', Auth::id())->with('umkms')->first();
         if (!$holding)
             return $this->errorResponse($holding);
 

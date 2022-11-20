@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('nama_umkm');
             $table->string('alamat');
             $table->string('no_telp_umkm');
-            $table->string('parent_id')->nullable();
             $table->timestamps();
         });
     }
