@@ -55,6 +55,7 @@ class AuthController extends Controller
             DB::commit();
             return $this->successResponse('email-sent');
         } catch (Exception $e) {
+            DB::rollBack();
             return $this->errorResponse($e->getMessage(), 400);
         }
     }
@@ -68,13 +69,11 @@ class AuthController extends Controller
             ]);
 
             if (Auth::attempt($request->toArray())) {
-                $user = Auth::user();
-                $umkm = $user->umkm ? true : false;
-                $role = $umkm ? UserRole::UMKM : UserRole::BUYER;
-                $createToken = $user->createToken('auth-token-umkm', [$role]);
+                $user = User::find(Auth::id());
+                $createToken = $user->createToken('auth-token-umkm');
                 return $this->successResponse([
                     'access_token' => $createToken->plainTextToken,
-                    'umkm' => $umkm
+                    'umkm' => false
                 ]);
             } else {
                 return $this->errorResponse('Email or password is wrong', 401);
@@ -86,7 +85,7 @@ class AuthController extends Controller
 
     public function logout()
     {
-        Auth::user()->tokens()->delete();
+        User::find(Auth::id())->tokens()->delete();
         return $this->successResponse();
     }
 

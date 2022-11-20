@@ -14,11 +14,15 @@ class Umkm extends Model
         'nama_umkm',
         'alamat',
         'no_telp_umkm',
-        'parent_id'
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function holdings()
+    {
+        return $this->belongsToMany(Holding::class);
     }
 }

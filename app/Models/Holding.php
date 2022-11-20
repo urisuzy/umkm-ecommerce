@@ -8,16 +8,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
-class ProdukFoto extends Model
+class Holding extends Model
 {
     use HasFactory;
-    protected $table = 'produk_foto';
+    protected $table = 'holdings';
     protected $fillable = [
-        'produk_id',
-        'path_foto',
+        'user_id',
+        'nama',
+        'foto'
     ];
 
-    protected function pathFoto(): Attribute
+    protected function foto(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => Storage::disk(DiskEnum::IMAGE)->url($value),
@@ -25,8 +26,13 @@ class ProdukFoto extends Model
         );
     }
 
-    public function produk()
+    public function umkms()
     {
-        return $this->belongsTo(Produk::class);
+        return $this->belongsToMany(Umkm::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
