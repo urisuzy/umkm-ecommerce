@@ -25,6 +25,20 @@ php artisan optimize:clear
 php artisan serve
 ```
 
+## Update Instruction
+```
+git pull
+```
+```
+php artisan migrate:refresh
+```
+```
+php artisan optimize:clear
+```
+```
+php artisan serve
+```
+
 ## Features
 ### Akun
 ```
