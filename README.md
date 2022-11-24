@@ -44,7 +44,7 @@ php artisan serve
 php artisan serve
 ```
 ```
-ngrok http 8000
+./ngrok.exe http 8000
 ```
 
 ## Features
