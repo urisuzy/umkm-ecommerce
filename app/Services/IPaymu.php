@@ -24,8 +24,6 @@ class IPaymu
 
   public function generateRequestBody(array $product, array $qty, array $price, string $referenceId): array
   {
-    echo $this->generateUrl('notifyUrl');
-
     $body['product']    = $product;
     $body['qty']        = $qty;
     $body['price']      = $price;

@@ -3,8 +3,12 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Foto\FotoProdukController;
 use App\Http\Controllers\Holding\OwnerHoldingController;
+use App\Http\Controllers\Holding\PublicHoldingController;
 use App\Http\Controllers\PaymentGateway\IpaymuController;
+use App\Http\Controllers\Pembelian\BuyerPembelianController;
+use App\Http\Controllers\Produk\PublicProdukController;
 use App\Http\Controllers\Produk\SellerProdukController;
+use App\Http\Controllers\Umkm\PublicUmkmController;
 use App\Http\Controllers\Umkm\UmkmController;
 use App\Http\Middleware\EnsureOwnThisProduk;
 use App\Http\Middleware\EnsureOwnThisUmkm;
@@ -71,7 +75,30 @@ Route::prefix('holding')->middleware(['auth:sanctum'])->group(function () {
     Route::post('{id}/update', [OwnerHoldingController::class, 'update']);
 });
 
+Route::prefix('pembelian')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('/', [BuyerPembelianController::class, 'list']);
+    Route::post('/', [BuyerPembelianController::class, 'create']);
+    Route::get('/pay/{id}', [BuyerPembelianController::class, 'redirectPay'])->withoutMiddleware(['auth:sanctum']);
+    Route::get('{id}', [BuyerPembelianController::class, 'get']);
+});
+
+Route::prefix('public')->group(function () {
+    Route::prefix('holding')->group(function () {
+        Route::get('{id}', [PublicHoldingController::class, 'get']);
+    });
+
+    Route::prefix('produk')->group(function () {
+        Route::get('/', [PublicProdukController::class, 'list']);
+        Route::get('{id}', [PublicProdukController::class, 'get']);
+    });
+
+    Route::prefix('umkm')->group(function () {
+        Route::get('{id}', [PublicUmkmController::class, 'get']);
+    });
+});
+
 Route::prefix('payment-gateway')->group(function () {
     Route::post('ipaymu', [IpaymuController::class, 'webhook']);
 });
+
 // require __DIR__ . '/auth.php';

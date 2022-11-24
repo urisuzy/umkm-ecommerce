@@ -12,9 +12,9 @@ class DetailPembelian extends Model
     protected $fillable = [
         'pembelian_id',
         'produk_id',
-        'jumlah_produk',
-        'total_bayar',
         'diskon',
+        'jumlah_barang',
+        'total_harga',
     ];
     
     public function pembelian()

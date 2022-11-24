@@ -70,6 +70,10 @@ class AuthController extends Controller
 
             if (Auth::attempt($request->toArray())) {
                 $user = User::find(Auth::id());
+
+                if (!$user->email_verified_at)
+                    return $this->errorResponse('email-not-verified');
+
                 $createToken = $user->createToken('auth-token-umkm');
                 return $this->successResponse([
                     'access_token' => $createToken->plainTextToken,

@@ -17,8 +17,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('pembelian_id');
             $table->foreignId('produk_id');
-            $table->integer('jumlah');
             $table->integer('diskon');
+            $table->bigInteger('jumlah_barang');
+            $table->bigInteger('total_harga');
             $table->timestamps();
         });
     }

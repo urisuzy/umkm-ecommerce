@@ -20,4 +20,14 @@ trait ApiResponser
       'message' => $message,
     ], $code);
   }
+
+  public function paginateSuccessResponse($paginated, $code = 200)
+  {
+      return $this->successResponse([
+          'current_page' => $paginated->currentPage(),
+          'per_page' => (int) $paginated->perPage(),
+          'total' => $paginated->total(),
+          'data' => $paginated->items()
+      ], $code);
+  }
 }
