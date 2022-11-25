@@ -45,7 +45,7 @@ class SellerProdukController extends Controller
     public function get($umkmId, $id)
     {
         try {
-            $produk = Produk::where('id', $id)->first();
+            $produk = Produk::where('id', $id)->with(['fotos'])->first();
 
             if (!$produk)
                 return $this->errorResponse('Produk not found', 404);

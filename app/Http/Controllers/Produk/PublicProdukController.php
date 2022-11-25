@@ -22,7 +22,7 @@ class PublicProdukController extends Controller
                 'orderby' => ['required', 'in:id,nama,harga,diskon']
             ]);
 
-            $produks = Produk::with(['umkm']);
+            $produks = Produk::with(['umkm', 'fotos']);
 
             if ($request->filled('search'))
                 $produks = $produks->where('nama', 'like', "%{$request->search}%");

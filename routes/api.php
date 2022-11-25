@@ -12,6 +12,7 @@ use App\Http\Controllers\Produk\PublicProdukController;
 use App\Http\Controllers\Produk\SellerProdukController;
 use App\Http\Controllers\Umkm\PublicUmkmController;
 use App\Http\Controllers\Umkm\UmkmController;
+use App\Http\Controllers\User\UserController;
 use App\Http\Middleware\EnsureOwnThisProduk;
 use App\Http\Middleware\EnsureOwnThisUmkm;
 use Illuminate\Http\Request;
@@ -28,16 +29,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
     Route::post('resend-verification', [AuthController::class, 'resendVerification']);
 
     Route::post('logout', [AuthController::class, 'logout'])->middleware(['auth:sanctum']);
+});
+
+Route::prefix('user')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('me', [UserController::class, 'me']);
 });
 
 // Seller Routes
@@ -105,7 +106,7 @@ Route::prefix('public')->group(function () {
         Route::get('{id}', [PublicUmkmController::class, 'get']);
     });
 
-    Route::prefix('pembelian')->group(function() {
+    Route::prefix('pembelian')->group(function () {
         Route::post('{id}/received', [PublicPembelianController::class, 'updateReceived']);
     });
 });

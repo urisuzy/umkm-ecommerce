@@ -20,4 +20,9 @@ class Produk extends Model
     {
         return $this->belongsTo(Umkm::class);
     }
+
+    public function fotos()
+    {
+        return $this->hasMany(ProdukFoto::class);
+    }
 }
