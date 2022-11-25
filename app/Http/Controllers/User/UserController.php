@@ -17,4 +17,14 @@ class UserController extends Controller
         $user = User::where('id', Auth::id())->with(['profile', 'umkms', 'holdings'])->first();
         return $this->successResponse($user);
     }
+
+    public function get($id)
+    {
+        $user = User::where('id', $id)->with(['profile', 'umkms', 'holdings'])->first();
+
+        if (!$user)
+            return $this->errorResponse('User not found', 404);
+
+        return $this->successResponse($user);
+    }
 }
