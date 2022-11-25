@@ -47,6 +47,22 @@ php artisan serve
 ./ngrok.exe http 8000
 ```
 
+## Important Link
+```
+http://localhost:3000/404
+```
+```
+http://localhost:3000/order/thank-you
+```
+```
+http://localhost:3000/auth/success-verified
+```
+```
+http://localhost:3000/auth/failed-verified
+```
+```
+http://localhost:8000/api/pembelian/1/pay
+```
 ## Features
 ### Akun
 ```
