@@ -15,9 +15,10 @@ return new class extends Migration
     {
         Schema::create('pembelian', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('buyer_id');
-            $table->foreignId('seller_id');
+            $table->foreignId('user_id');
+            $table->foreignId('umkm_id');
             $table->integer('no_kuitansi');
+            $table->bigInteger('total_harga');
             $table->string('status');
             $table->string('payment_code');
             $table->string('no_resi')->nullable();

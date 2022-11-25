@@ -22,7 +22,8 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'name',
         'email',
-        'password'
+        'password',
+        'balance'
     ];
 
     /**
@@ -49,8 +50,13 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(UserProfile::class);
     }
 
-    public function umkm()
+    public function umkms()
     {
-        return $this->hasOne(Umkm::class);
+        return $this->hasMany(Umkm::class);
+    }
+
+    public function holdings()
+    {
+        return $this->hasMany(Holding::class);
     }
 }

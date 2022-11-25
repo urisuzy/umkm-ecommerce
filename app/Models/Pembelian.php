@@ -10,9 +10,10 @@ class Pembelian extends Model
     use HasFactory;
     protected $table = 'pembelian';
     protected $fillable = [
-        'buyer_id',
-        'seller_id',
+        'user_id',
+        'umkm_id',
         'no_kuitansi',
+        'total_harga',
         'status',
         'payment_code',
         'no_resi',
@@ -28,11 +29,11 @@ class Pembelian extends Model
 
     public function buyer()
     {
-        return $this->belongsTo(User::class, 'buyer_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function seller()
     {
-        return $this->belongsTo(User::class, 'seller_id');
+        return $this->belongsTo(Umkm::class, 'umkm_id');
     }
 }

@@ -15,7 +15,7 @@ class PublicProdukController extends Controller
     {
         try {
             $request->validate([
-                'nama' => '',
+                'search' => '',
                 'umkm_id' => '',
                 'perpage' => 'required',
                 'order' => ['required', 'in:asc,desc'],
@@ -24,8 +24,8 @@ class PublicProdukController extends Controller
 
             $produks = Produk::with(['umkm']);
 
-            if ($request->filled('nama'))
-                $produks = $produks->where('nama', 'like', "%{$request->nama}%");
+            if ($request->filled('search'))
+                $produks = $produks->where('nama', 'like', "%{$request->search}%");
 
             if ($request->filled('umkm_id'))
                 $produks = $produks->where('umkm_id', $request->umkm_id);

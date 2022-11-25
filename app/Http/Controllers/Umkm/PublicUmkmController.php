@@ -16,7 +16,7 @@ class PublicUmkmController extends Controller
         $umkm = Umkm::where('id', $id)->with(['holdings'])->first();
 
         if (!$umkm)
-            return $this->errorResponse($umkm);
+            return $this->errorResponse('Umkm not found', 404);
 
         return $this->successResponse($umkm);
     }

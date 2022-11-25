@@ -6,6 +6,8 @@ use App\Http\Controllers\Holding\OwnerHoldingController;
 use App\Http\Controllers\Holding\PublicHoldingController;
 use App\Http\Controllers\PaymentGateway\IpaymuController;
 use App\Http\Controllers\Pembelian\BuyerPembelianController;
+use App\Http\Controllers\Pembelian\PublicPembelianController;
+use App\Http\Controllers\Pembelian\SellerPembelianController;
 use App\Http\Controllers\Produk\PublicProdukController;
 use App\Http\Controllers\Produk\SellerProdukController;
 use App\Http\Controllers\Umkm\PublicUmkmController;
@@ -62,6 +64,12 @@ Route::prefix('umkm')->middleware(['auth:sanctum'])->group(function () {
             Route::put('{id}', [SellerProdukController::class, 'update'])->middleware(EnsureOwnThisProduk::class);
             Route::delete('{id}', [SellerProdukController::class, 'delete'])->middleware(EnsureOwnThisProduk::class);
         });
+
+        Route::prefix('pembelian')->group(function () {
+            Route::get('/', [SellerPembelianController::class, 'list']);
+            Route::post('{id}/resi', [SellerPembelianController::class, 'updateResi']);
+            Route::get('{id}', [SellerPembelianController::class, 'get']);
+        });
     });
 });
 
@@ -78,7 +86,8 @@ Route::prefix('holding')->middleware(['auth:sanctum'])->group(function () {
 Route::prefix('pembelian')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [BuyerPembelianController::class, 'list']);
     Route::post('/', [BuyerPembelianController::class, 'create']);
-    Route::get('/pay/{id}', [BuyerPembelianController::class, 'redirectPay'])->withoutMiddleware(['auth:sanctum']);
+    Route::post('{id}/done', [BuyerPembelianController::class, 'setDone']);
+    Route::get('{id}/pay', [BuyerPembelianController::class, 'redirectPay'])->withoutMiddleware(['auth:sanctum']);
     Route::get('{id}', [BuyerPembelianController::class, 'get']);
 });
 
@@ -94,6 +103,10 @@ Route::prefix('public')->group(function () {
 
     Route::prefix('umkm')->group(function () {
         Route::get('{id}', [PublicUmkmController::class, 'get']);
+    });
+
+    Route::prefix('pembelian')->group(function() {
+        Route::post('{id}/received', [PublicPembelianController::class, 'updateReceived']);
     });
 });
 

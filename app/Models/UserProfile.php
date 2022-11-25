@@ -13,7 +13,7 @@ class UserProfile extends Model
         'user_id',
         'nama',
         'alamat',
-        'no_telp'
+        'no_telp',
     ];
 
     protected $hidden = [

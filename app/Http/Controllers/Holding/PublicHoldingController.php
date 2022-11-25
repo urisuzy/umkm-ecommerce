@@ -16,7 +16,7 @@ class PublicHoldingController extends Controller
         $holding = Holding::where('id', $id)->with(['umkms'])->first();
 
         if (!$holding)
-            return $this->errorResponse($holding);
+            return $this->errorResponse('Holding not found', 404);
 
         return $this->successResponse($holding);
     }
