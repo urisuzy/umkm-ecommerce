@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Umkm;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UmkmResource;
+use App\Models\Holding;
 use App\Models\Umkm;
 use App\Traits\ApiResponser;
 use Exception;
@@ -15,30 +17,43 @@ class UmkmController extends Controller
     use ApiResponser;
     public function store(Request $request)
     {
+        DB::beginTransaction();
         try {
             $request->validate([
                 'nama_umkm' => ['required', 'max:255', 'string'],
                 'alamat' => ['required', 'string', 'max:255'],
-                'no_telp_umkm' => ['required', 'numeric']
+                'no_telp_umkm' => ['required', 'numeric'],
+                'holding_id' => []
             ]);
 
             $user = Auth::user();
+
+            if ($request->filled('holding_id')) {
+                $holding = Holding::where('user_id', Auth::id())->where('id', $request->holding_id)->first();
+
+                if (!$holding)
+                    return $this->errorResponse('Holding not found', 404);
+            }
 
             $umkm = Umkm::create([
                 'user_id' => $user->id,
                 ...$request->toArray()
             ]);
 
-            return $this->successResponse($umkm);
+            if ($request->filled('holding_id'))
+                $holding->umkms()->attach($umkm->id);
         } catch (Exception $e) {
+            DB::rollBack();
             return $this->errorResponse($e->getMessage(), 400);
         }
+        DB::commit();
+        return $this->successResponse(new UmkmResource($umkm));
     }
 
     public function list()
     {
         $umkms = Umkm::where('user_id', Auth::id())->get();
-        return $this->successResponse($umkms);
+        return $this->successResponse(UmkmResource::collection($umkms));
     }
 
     public function get($umkmId)
@@ -49,7 +64,7 @@ class UmkmController extends Controller
             if (!$umkm)
                 return $this->errorResponse('Umkm not found', 404);
 
-            return $this->successResponse($umkm);
+            return $this->successResponse(new UmkmResource($umkm));
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage());
         }
@@ -79,6 +94,6 @@ class UmkmController extends Controller
             return $this->errorResponse($e->getMessage());
         }
         DB::commit();
-        return $this->successResponse($umkm);
+        return $this->successResponse(new UmkmResource($umkm));
     }
 }

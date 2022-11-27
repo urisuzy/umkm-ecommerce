@@ -104,6 +104,7 @@ Route::prefix('public')->group(function () {
     });
 
     Route::prefix('umkm')->group(function () {
+        Route::get('/', [PublicUmkmController::class, 'list']);
         Route::get('{id}', [PublicUmkmController::class, 'get']);
     });
 

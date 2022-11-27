@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Pembelian;
 
 use App\Enums\OrderEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PembelianResource;
 use App\Mail\OrderShipped;
 use App\Models\Pembelian;
 use App\Traits\ApiResponser;
@@ -38,7 +39,7 @@ class SellerPembelianController extends Controller
             return $this->errorResponse($e->getMessage());
         }
 
-        return $this->paginateSuccessResponse($pembelians);
+        return $this->paginateSuccessResponse(PembelianResource::collection($pembelians));
     }
 
     public function get($umkmId, $id)
@@ -48,7 +49,7 @@ class SellerPembelianController extends Controller
         if (!$pembelian)
             return $this->errorResponse('Pembelian not found', 404);
 
-        return $this->successResponse($pembelian);
+        return $this->successResponse(new PembelianResource($pembelian));
     }
 
     public function updateResi(Request $request, $umkmId, $id)
@@ -79,6 +80,6 @@ class SellerPembelianController extends Controller
             return $this->errorResponse($e->getMessage());
         }
         DB::commit();
-        return $this->successResponse($pembelian);
+        return $this->successResponse(new PembelianResource($pembelian));
     }
 }

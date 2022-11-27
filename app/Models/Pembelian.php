@@ -22,6 +22,8 @@ class Pembelian extends Model
         'sent_at',
     ];
 
+    protected $withCount = ['details'];
+
     public function details()
     {
         return $this->hasMany(DetailPembelian::class);

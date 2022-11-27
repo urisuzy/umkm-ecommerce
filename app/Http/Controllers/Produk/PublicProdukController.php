@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Produk;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProdukResource;
 use App\Models\Produk;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
@@ -37,7 +38,7 @@ class PublicProdukController extends Controller
             return $this->errorResponse($e->getMessage());
         }
 
-        return $this->paginateSuccessResponse($produks);
+        return $this->paginateSuccessResponse(ProdukResource::collection($produks));
     }
 
     public function get($id)
@@ -47,6 +48,6 @@ class PublicProdukController extends Controller
         if (!$produk)
             return $this->errorResponse('Produk not found', 404);
 
-        return $this->successResponse($produk);
+        return $this->successResponse(new ProdukResource($produk));
     }
 }

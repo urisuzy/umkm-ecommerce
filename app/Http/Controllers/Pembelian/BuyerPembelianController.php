@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Pembelian;
 
 use App\Enums\OrderEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PembelianResource;
 use App\Mail\OrderDone;
 use App\Models\DetailPembelian;
 use App\Models\Pembelian;
@@ -42,7 +43,7 @@ class BuyerPembelianController extends Controller
             return $this->errorResponse($e->getMessage());
         }
 
-        return $this->paginateSuccessResponse($pembelians);
+        return $this->paginateSuccessResponse(PembelianResource::collection($pembelians));
     }
 
     public function get($id)
@@ -52,7 +53,7 @@ class BuyerPembelianController extends Controller
         if (!$pembelians)
             return $this->errorResponse('Pembelian not found', 404);
 
-        return $this->successResponse($pembelians);
+        return $this->successResponse(PembelianResource::collection($pembelians));
     }
 
     public function create(Request $request)
@@ -122,7 +123,7 @@ class BuyerPembelianController extends Controller
             return $this->errorResponse($e->getMessage());
         }
         DB::commit();
-        return $this->successResponse($get);
+        return $this->successResponse(new PembelianResource($get));
     }
 
     public function setDone($id)
@@ -151,7 +152,7 @@ class BuyerPembelianController extends Controller
             return $this->errorResponse($e->getMessage());
         }
         DB::commit();
-        return $this->successResponse($pembelian);
+        return $this->successResponse(new PembelianResource($pembelian));
     }
 
     public function redirectPay($id)

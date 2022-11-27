@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Holding;
 
 use App\Enums\DiskEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\HoldingResource;
 use App\Models\Holding;
 use App\Models\Umkm;
 use App\Traits\ApiResponser;
@@ -39,7 +40,7 @@ class OwnerHoldingController extends Controller
             return $this->errorResponse($e->getMessage());
         }
         DB::commit();
-        return $this->successResponse($holding);
+        return $this->successResponse(new HoldingResource($holding));
     }
 
     public function get($id)
@@ -48,14 +49,14 @@ class OwnerHoldingController extends Controller
         if (!$holding)
             return $this->errorResponse($holding);
 
-        return $this->successResponse($holding);
+        return $this->successResponse(new HoldingResource($holding));
     }
 
     public function list()
     {
         $holdings = Holding::where('user_id', Auth::id())->orderByDesc('id')->withCount('umkms')->get();
 
-        return $this->successResponse($holdings);
+        return $this->successResponse(HoldingResource::collection($holdings));
     }
 
     public function update(Request $request, $id)
@@ -81,7 +82,7 @@ class OwnerHoldingController extends Controller
             return $this->errorResponse($e->getMessage());
         }
         DB::commit();
-        return $this->successResponse($holding);
+        return $this->successResponse(new HoldingResource($holding));
     }
 
     public function addUmkmToHolding(Request $request, $id)
@@ -92,7 +93,7 @@ class OwnerHoldingController extends Controller
                 'umkm_id' => ['required', 'exists:umkm,id']
             ]);
 
-            $holding = Holding::where('id', $id)->where('user_id', Auth::id())->first();
+            $holding = Holding::where('id', $id)->where('user_id', Auth::id())->with('umkms')->first();
             $umkm = Umkm::where('id', $request->umkm_id)->where('user_id', Auth::id())->first();
 
             if (!$holding)
@@ -100,6 +101,10 @@ class OwnerHoldingController extends Controller
 
             if (!$umkm)
                 return $this->errorResponse('Umkm not found', 404);
+
+            // check attached
+            if ($holding->umkms()->where('umkm_id', $request->umkm_id)->first())
+                return $this->errorResponse('Umkm already exist in holding', 422);
 
             $holding->umkms()->attach($request->umkm_id);
         } catch (\Exception $e) {

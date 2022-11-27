@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
@@ -15,7 +16,7 @@ class UserController extends Controller
     public function me()
     {
         $user = User::where('id', Auth::id())->with(['profile', 'umkms', 'holdings'])->first();
-        return $this->successResponse($user);
+        return $this->successResponse(new UserResource($user));
     }
 
     public function get($id)
@@ -25,6 +26,6 @@ class UserController extends Controller
         if (!$user)
             return $this->errorResponse('User not found', 404);
 
-        return $this->successResponse($user);
+        return $this->successResponse(new UserResource($user));
     }
 }

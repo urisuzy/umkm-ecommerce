@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Produk;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProdukResource;
 use App\Models\Produk;
 use App\Models\ProdukFoto;
 use App\Traits\ApiResponser;
@@ -39,7 +40,7 @@ class SellerProdukController extends Controller
             return $this->errorResponse($e->getMessage());
         }
         DB::commit();
-        return $this->successResponse($produk);
+        return $this->successResponse(new ProdukResource($produk));
     }
 
     public function get($umkmId, $id)
@@ -52,14 +53,14 @@ class SellerProdukController extends Controller
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage());
         }
-        return $this->successResponse($produk);
+        return $this->successResponse(new ProdukResource($produk));
     }
 
     public function list(Request $request)
     {
         $umkmId = $request->route('umkmId');
         $produks = Produk::where('umkm_id', $umkmId)->orderByDesc('id')->get();
-        return $this->successResponse($produks);
+        return $this->successResponse(ProdukResource::collection($produks));
     }
 
     public function update(Request $request, $umkmId,  $id)
@@ -86,7 +87,7 @@ class SellerProdukController extends Controller
             return $this->errorResponse($e->getMessage());
         }
         DB::commit();
-        return $this->successResponse($produk);
+        return $this->successResponse(new ProdukResource($produk));
     }
 
     public function delete($umkmId, $id)

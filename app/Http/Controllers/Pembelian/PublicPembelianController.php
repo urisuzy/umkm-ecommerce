@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Pembelian;
 
 use App\Enums\OrderEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PembelianResource;
 use App\Mail\OrderReceived;
 use App\Models\Pembelian;
 use App\Traits\ApiResponser;
@@ -37,6 +38,6 @@ class PublicPembelianController extends Controller
             return $this->errorResponse($e, 400);
         }
         DB::commit();
-        return $this->successResponse($pembelian);
+        return $this->successResponse(new PembelianResource($pembelian));
     }
 }

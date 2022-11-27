@@ -16,6 +16,8 @@ class Umkm extends Model
         'no_telp_umkm',
     ];
 
+    protected $withCount = ['produks'];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -24,5 +26,10 @@ class Umkm extends Model
     public function holdings()
     {
         return $this->belongsToMany(Holding::class);
+    }
+
+    public function produks()
+    {
+        return $this->hasMany(Produk::class);
     }
 }
