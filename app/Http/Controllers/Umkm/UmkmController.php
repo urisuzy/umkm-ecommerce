@@ -50,9 +50,14 @@ class UmkmController extends Controller
         return $this->successResponse(new UmkmResource($umkm));
     }
 
-    public function list()
+    public function list(Request $request)
     {
-        $umkms = Umkm::where('user_id', Auth::id())->get();
+        $umkms = Umkm::where('user_id', Auth::id());
+
+        if ($request->filled('holding_id'))
+            $umkms = $umkms->whereRelation('holdings', 'holding_id', $request->holding_id);
+
+        $umkms = $umkms->get();
         return $this->successResponse(UmkmResource::collection($umkms));
     }
 

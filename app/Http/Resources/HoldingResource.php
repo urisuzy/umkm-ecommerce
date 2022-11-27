@@ -21,6 +21,7 @@ class HoldingResource extends JsonResource
             'foto' => $this->foto,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'umkms_count' => $this->umkms_count ?? 0
         ];
     }
 }

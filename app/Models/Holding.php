@@ -18,6 +18,8 @@ class Holding extends Model
         'foto'
     ];
 
+    protected $withCount = ['umkms'];
+
     protected function foto(): Attribute
     {
         return Attribute::make(
