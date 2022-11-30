@@ -52,9 +52,14 @@ class OwnerHoldingController extends Controller
         return $this->successResponse(new HoldingResource($holding));
     }
 
-    public function list()
+    public function list(Request $request)
     {
-        $holdings = Holding::where('user_id', Auth::id())->orderByDesc('id')->withCount('umkms')->get();
+        $holdings = Holding::where('user_id', Auth::id())->withCount('umkms');
+
+        if ($request->filled('umkm_id'))
+            $holdings = $holdings->whereRelation('umkms', 'umkm_id', $request->umkm_id);
+
+        $holdings = $holdings->get();
 
         return $this->successResponse(HoldingResource::collection($holdings));
     }

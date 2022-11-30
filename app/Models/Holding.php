@@ -20,14 +20,6 @@ class Holding extends Model
 
     protected $withCount = ['umkms'];
 
-    protected function foto(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => Storage::disk(DiskEnum::IMAGE)->url($value),
-            set: fn ($value) => $value,
-        );
-    }
-
     public function umkms()
     {
         return $this->belongsToMany(Umkm::class);

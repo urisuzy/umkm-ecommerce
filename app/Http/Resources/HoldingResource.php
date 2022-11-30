@@ -2,7 +2,9 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\DiskEnum;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class HoldingResource extends JsonResource
 {
@@ -18,7 +20,7 @@ class HoldingResource extends JsonResource
             'id' => $this->id,
             'user_id' => $this->user_id,
             'nama' => $this->nama,
-            'foto' => $this->foto,
+            'foto' => $this->foto ? Storage::disk(DiskEnum::IMAGE)->url($this->foto) : null,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'umkms_count' => $this->umkms_count ?? 0
