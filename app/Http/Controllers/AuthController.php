@@ -75,6 +75,7 @@ class AuthController extends Controller
                     return $this->errorResponse('email-not-verified');
 
                 $createToken = $user->createToken('auth-token-umkm');
+                $request->session()->regenerate();
                 return $this->successResponse([
                     'access_token' => $createToken->plainTextToken,
                     'umkm' => false
@@ -89,19 +90,15 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        // $request->user()->currentAccessToken()->delete();
         Auth::guard('web')->logout();
 
-        // $request->session()->invalidate();
+        if ($request->hasSession()) {
+            $request->session()->invalidate();
 
-        // $request->session()->regenerateToken();
-        // Auth::logout();
+            $request->session()->regenerateToken();
+        }
         // User::find(Auth::id())->tokens()->delete();
-        // $request->session()
-
-        // $request->session()->invalidate();
-
-        // $request->session()->regenerateToken();
 
         return $this->successResponse();
     }
