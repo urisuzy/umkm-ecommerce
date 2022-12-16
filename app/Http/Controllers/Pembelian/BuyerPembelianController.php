@@ -48,12 +48,12 @@ class BuyerPembelianController extends Controller
 
     public function get($id)
     {
-        $pembelians = Pembelian::where('id', $id)->where('user_id', Auth::id())->with(['details', 'buyer', 'seller'])->first();
+        $pembelian = Pembelian::where('id', $id)->where('user_id', Auth::id())->with(['details', 'buyer', 'seller'])->first();
 
-        if (!$pembelians)
+        if (!$pembelian)
             return $this->errorResponse('Pembelian not found', 404);
 
-        return $this->successResponse(PembelianResource::collection($pembelians));
+        return $this->successResponse(new PembelianResource($pembelian));
     }
 
     public function create(Request $request)

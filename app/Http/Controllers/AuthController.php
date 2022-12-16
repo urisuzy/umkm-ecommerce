@@ -75,7 +75,6 @@ class AuthController extends Controller
                     return $this->errorResponse('email-not-verified');
 
                 $createToken = $user->createToken('auth-token-umkm');
-                $request->session()->regenerate();
                 return $this->successResponse([
                     'access_token' => $createToken->plainTextToken,
                     'umkm' => false
