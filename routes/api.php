@@ -15,6 +15,7 @@ use App\Http\Controllers\Umkm\UmkmController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Middleware\EnsureOwnThisProduk;
 use App\Http\Middleware\EnsureOwnThisUmkm;
+use App\Http\Middleware\EnsureUmkmExist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -48,10 +49,10 @@ Route::prefix('umkm')->middleware(['auth:sanctum'])->group(function () {
     Route::post('/', [UmkmController::class, 'store']);
     Route::get('/', [UmkmController::class, 'list']);
 
-    Route::prefix('{umkmId}')->middleware(EnsureOwnThisUmkm::class)->group(function () {
+    Route::prefix('{umkmId}')->middleware(EnsureUmkmExist::class)->group(function () {
 
-        Route::get('/', [UmkmController::class, 'get']);
-        Route::put('/', [UmkmController::class, 'update']);
+        Route::get('/', [UmkmController::class, 'get'])->middleware(EnsureOwnThisUmkm::class);
+        Route::put('/', [UmkmController::class, 'update'])->middleware(EnsureOwnThisUmkm::class);
 
         // Foto Routes
         Route::prefix('foto')->group(function () {

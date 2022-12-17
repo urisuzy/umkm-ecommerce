@@ -9,6 +9,7 @@ use App\Mail\OrderShipped;
 use App\Models\Pembelian;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
@@ -26,7 +27,12 @@ class SellerPembelianController extends Controller
                 'status' => ''
             ]);
 
-            $pembelians = Pembelian::with(['details', 'buyer', 'seller'])->where('umkm_id', $umkmId);
+            $pembelians = Pembelian::with(['details', 'buyer', 'seller']);
+
+            if ($umkmId == 'all')
+                $pembelians = $pembelians->whereRelation('seller', 'user_id', Auth::id());
+            else
+                $pembelians = $pembelians->where('umkm_id', $umkmId);
 
             $orderStatus = OrderEnum::getConstants();
             if ($request->filled('status') && in_array($request->status, $orderStatus))
@@ -44,7 +50,14 @@ class SellerPembelianController extends Controller
 
     public function get($umkmId, $id)
     {
-        $pembelian = Pembelian::where('id', $id)->where('umkm_id', $umkmId)->with(['details', 'buyer', 'seller'])->first();
+        $pembelian = Pembelian::where('id', $id);
+
+        if ($umkmId == 'all')
+            $pembelian = $pembelian->whereRelation('seller', 'user_id', Auth::id());
+        else
+            $pembelian = $pembelian->where('umkm_id', $umkmId);
+
+        $pembelian = $pembelian->with(['details', 'buyer', 'seller'])->first();
 
         if (!$pembelian)
             return $this->errorResponse('Pembelian not found', 404);
@@ -60,7 +73,14 @@ class SellerPembelianController extends Controller
                 'no_resi' => 'required'
             ]);
 
-            $pembelian = Pembelian::where('umkm_id', $umkmId)->where('id', $id)->first();
+            $pembelian = Pembelian::query();
+
+            if ($umkmId == 'all')
+                $pembelian = $pembelian->whereRelation('seller', 'user_id', Auth::id());
+            else
+                $pembelian = $pembelian->where('umkm_id', $umkmId);
+
+            $pembelian = $pembelian->where('id', $id)->first();
 
             if (!$pembelian)
                 return $this->errorResponse('Pembelian not found', 404);

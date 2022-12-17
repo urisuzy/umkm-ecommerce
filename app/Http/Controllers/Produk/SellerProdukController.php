@@ -56,10 +56,18 @@ class SellerProdukController extends Controller
         return $this->successResponse(new ProdukResource($produk));
     }
 
-    public function list(Request $request)
+    public function list(Request $request, $umkmId)
     {
         $umkmId = $request->route('umkmId');
-        $produks = Produk::where('umkm_id', $umkmId)->orderByDesc('id')->get();
+        $produks = Produk::query();
+
+        if ($umkmId == 'all')
+            $produks = $produks->whereRelation('umkm', 'user_id', Auth::id());
+        else
+            $produks = $produks->where('umkm_id', $umkmId);
+
+        $produks = $produks->orderByDesc('id')->get();
+
         return $this->successResponse(ProdukResource::collection($produks));
     }
 
