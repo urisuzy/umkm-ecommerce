@@ -6,6 +6,7 @@ use App\Enums\OrderEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PembelianResource;
 use App\Mail\OrderDone;
+use App\Mail\OrderReviewed;
 use App\Models\DetailPembelian;
 use App\Models\Pembelian;
 use App\Models\Produk;
@@ -166,5 +167,34 @@ class BuyerPembelianController extends Controller
             return redirect(config('app.frontend_url') . '/404');
 
         return redirect("https://sandbox.ipaymu.com/payment/{$pembelian->payment_code}");
+    }
+
+    public function setReview(Request $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $request->validate([
+                'review' => ['required']
+            ]);
+
+            $pembelian = Pembelian::where('id', $id)->where('user_id', Auth::id())->first();
+
+            if (!$pembelian)
+                return $this->errorResponse('Pembelian not found', 404);
+
+            if ($pembelian->status != OrderEnum::DONE)
+                return $this->errorResponse('Pembelian belum diselesaikan', 422);
+
+            $pembelian->review = $request->review;
+            $pembelian->save();
+
+            // SEND MAIL
+            Mail::to($pembelian->buyer->email)->send(new OrderReviewed());
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->errorResponse($e->getMessage());
+        }
+        DB::commit();
+        return $this->successResponse(new PembelianResource($pembelian));
     }
 }

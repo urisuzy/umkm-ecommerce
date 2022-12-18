@@ -90,6 +90,7 @@ Route::prefix('pembelian')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [BuyerPembelianController::class, 'list']);
     Route::post('/', [BuyerPembelianController::class, 'create']);
     Route::post('{id}/done', [BuyerPembelianController::class, 'setDone']);
+    Route::post('{id}/review', [BuyerPembelianController::class, 'setReview']);
     Route::get('{id}/pay', [BuyerPembelianController::class, 'redirectPay'])->withoutMiddleware(['auth:sanctum']);
     Route::get('{id}', [BuyerPembelianController::class, 'get']);
 });
