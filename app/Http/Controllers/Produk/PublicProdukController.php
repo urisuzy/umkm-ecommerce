@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Produk;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProdukResource;
+use App\Http\Resources\ReviewResource;
+use App\Models\Pembelian;
 use App\Models\Produk;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
@@ -49,5 +51,19 @@ class PublicProdukController extends Controller
             return $this->errorResponse('Produk not found', 404);
 
         return $this->successResponse(new ProdukResource($produk));
+    }
+
+    public function listReviews($id)
+    {
+        $pembelians = Pembelian::query()
+            ->whereNotNull('review')
+            ->whereRelation('details', 'produk_id', $id)
+            ->with('buyer')
+            ->get();
+
+        if (!$pembelians)
+            return $this->errorResponse('Produk tidak ditemukan atau produk tidak memiliki review', 404);
+
+        return $this->successResponse(ReviewResource::collection($pembelians));
     }
 }

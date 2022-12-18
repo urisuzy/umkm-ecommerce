@@ -102,6 +102,7 @@ Route::prefix('public')->group(function () {
 
     Route::prefix('produk')->group(function () {
         Route::get('/', [PublicProdukController::class, 'list']);
+        Route::get('{id}/reviews', [PublicProdukController::class, 'listReviews']);
         Route::get('{id}', [PublicProdukController::class, 'get']);
     });
 
